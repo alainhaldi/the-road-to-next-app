@@ -1,13 +1,26 @@
+import { initialTickets } from "@/data";
+
 type TicketPageProps = {
-  params: Promise<{
+  params: {
     ticketId: string;
-  }>;
+  };
 };
 
 const TicketPage = async ({ params }: TicketPageProps) => {
   const { ticketId } = await params;
+  const ticket = initialTickets.find((ticket) => ticket.id === ticketId);
 
-  return <h2 className="text-lg">TicketPage: {ticketId}</h2>;
+  if (!ticket) {
+    console.log(ticket);
+    return <div>Ticket not found</div>;
+  }
+
+  return (
+    <>
+      <h2 className="text-lg">{ticket.title}</h2>
+      <p className="text-sm">{ticket.content}</p>
+    </>
+  );
 };
 
 export default TicketPage;
