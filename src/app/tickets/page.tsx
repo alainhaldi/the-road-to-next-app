@@ -2,6 +2,10 @@ import Link from "next/link";
 import { initialTickets } from "@/data";
 import { ticketPath } from "@/paths";
 
+// const TICKET_ICON = {
+//   "DONE"
+// }
+
 const TicketPage = () => {
   return (
     <div>
