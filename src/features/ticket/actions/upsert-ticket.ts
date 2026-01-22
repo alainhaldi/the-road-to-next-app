@@ -3,20 +3,21 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import * as z from "zod/v4";
+import {
+  ActionState,
+  fromErrorToActionState,
+} from "@/components/form/utils/to-action-state";
 import prisma from "@/lib/prisma";
 import { ticketPath, ticketsPath } from "@/paths";
 
 const upsertTicketSchema = z.object({
-  title: z.string().min(1).max(191),
+  title: z.string().min(1, "title can't be empty").max(191),
   content: z.string().min(1).max(1024),
 });
 
 export const upsertTicket = async (
   id: string | undefined,
-  _actionState: {
-    message: string;
-    payload?: FormData;
-  },
+  _actionState: ActionState,
   formData: FormData,
 ) => {
   try {
@@ -31,10 +32,7 @@ export const upsertTicket = async (
       create: data,
     });
   } catch (error) {
-    return {
-      message: "Something went wrong",
-      payload: formData,
-    };
+    return fromErrorToActionState(error, formData);
   }
 
   revalidatePath(ticketsPath());
